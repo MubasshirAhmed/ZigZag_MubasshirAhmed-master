@@ -63,7 +63,6 @@ public class TilesCreator : MonoBehaviour
             _simpleTiles[i].name = "Tile_" + i;
             RandomTilePosition(i);
         }
-        StartCoroutine(ITileColorChange());
     }
 
     private void RandomTilePosition(int i)
@@ -88,7 +87,10 @@ public class TilesCreator : MonoBehaviour
         if (_startTransformCount == _tileCount)
             _tileTransformCondition = true;
         else if (_startFallingCount == _tileCount)
+        {
             _tileFallingCondition = true;
+            StartCoroutine(ITileColorChange());
+        }
         if (_tileFallingCondition)
         {
             _nextFallAbleTile = (_maxTileNumber + (_tileCount - _startFallingCount)) % _maxTileNumber;
@@ -112,16 +114,19 @@ public class TilesCreator : MonoBehaviour
         {
             colorChange = false;
             yield return new WaitForSeconds(5.0f);
-            colorChange = true;     
+            colorChange = true;
         }
     }
 
     private void Update()
     {
-        float lerp = Mathf.PingPong(Time.time, duration) / duration;
-        if (!colorChange)
-            _simpleTiles.Select(c => { c.transform.GetChild(0).transform.gameObject.GetComponent<Renderer>().material.color = Color.Lerp(colorStart, colorEnd, lerp); return c; }).ToList();
-        else
-            _simpleTiles.Select(c => { c.transform.GetChild(0).transform.gameObject.GetComponent<Renderer>().material.color = Color.Lerp(colorEnd, colorStart, lerp); return c; }).ToList();
+        if (_tileFallingCondition)
+        {
+            float lerp = Mathf.PingPong(Time.time, duration) / duration;
+            if (colorChange)
+                _simpleTiles.Select(c => { c.transform.GetChild(0).transform.gameObject.GetComponent<Renderer>().material.color = Color.Lerp(colorStart, colorEnd, lerp); return c; }).ToList();
+            else
+                _simpleTiles.Select(c => { c.transform.GetChild(0).transform.gameObject.GetComponent<Renderer>().material.color = Color.Lerp(colorEnd, colorStart, lerp); return c; }).ToList();
+        }
     }
 }
