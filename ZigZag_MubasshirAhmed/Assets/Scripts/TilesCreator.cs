@@ -63,9 +63,7 @@ public class TilesCreator : MonoBehaviour
             _simpleTiles[i].name = "Tile_" + i;
             RandomTilePosition(i);
         }
-
         StartCoroutine(ITileColorChange());
-
     }
 
     private void RandomTilePosition(int i)
@@ -114,8 +112,7 @@ public class TilesCreator : MonoBehaviour
         {
             colorChange = false;
             yield return new WaitForSeconds(5.0f);
-            colorChange = true;
-            //yield return new WaitForSeconds(5.0f);        
+            colorChange = true;     
         }
     }
 
