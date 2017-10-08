@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class TilesCreator : MonoBehaviour
 {
@@ -24,6 +25,13 @@ public class TilesCreator : MonoBehaviour
     private bool _tileFallingCondition;
     private int _tileCount;
     private int _nextFallAbleTile, _nextTransformAbleTile;
+    private Renderer[] rend;
+
+    private Color colorStart = new Color32(0, 236, 207, 255);
+    private Color colorEnd = new Color32(233, 114, 3, 0);
+    private float duration = 5.0f;
+
+    private bool colorChange;
 
     void Start()
     {
@@ -55,6 +63,9 @@ public class TilesCreator : MonoBehaviour
             _simpleTiles[i].name = "Tile_" + i;
             RandomTilePosition(i);
         }
+
+        StartCoroutine(ITileColorChange());
+
     }
 
     private void RandomTilePosition(int i)
@@ -78,7 +89,7 @@ public class TilesCreator : MonoBehaviour
     {
         if (_startTransformCount == _tileCount)
             _tileTransformCondition = true;
-        if (_startFallingCount == _tileCount)
+        else if (_startFallingCount == _tileCount)
             _tileFallingCondition = true;
         if (_tileFallingCondition)
         {
@@ -95,5 +106,25 @@ public class TilesCreator : MonoBehaviour
         _tileCount++;
         if (_tileCount >= _maxTileNumber)
             _tileCount = 0;
+    }
+
+    private IEnumerator ITileColorChange()
+    {
+        while (true)
+        {
+            colorChange = false;
+            yield return new WaitForSeconds(5.0f);
+            colorChange = true;
+            //yield return new WaitForSeconds(5.0f);        
+        }
+    }
+
+    private void Update()
+    {
+        float lerp = Mathf.PingPong(Time.time, duration) / duration;
+        if (!colorChange)
+            _simpleTiles.Select(c => { c.transform.GetChild(0).transform.gameObject.GetComponent<Renderer>().material.color = Color.Lerp(colorStart, colorEnd, lerp); return c; }).ToList();
+        else
+            _simpleTiles.Select(c => { c.transform.GetChild(0).transform.gameObject.GetComponent<Renderer>().material.color = Color.Lerp(colorEnd, colorStart, lerp); return c; }).ToList();
     }
 }
