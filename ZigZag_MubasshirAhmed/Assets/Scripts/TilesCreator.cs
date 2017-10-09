@@ -89,7 +89,7 @@ public class TilesCreator : MonoBehaviour
         else if (_startFallingCount == _tileCount)
         {
             _tileFallingCondition = true;
-            StartCoroutine(ITileColorChange());
+            //StartCoroutine(ITileColorChange());
         }
         if (_tileFallingCondition)
         {
@@ -118,15 +118,15 @@ public class TilesCreator : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        if (_tileFallingCondition)
-        {
-            float lerp = Mathf.PingPong(Time.time, duration) / duration;
-            if (colorChange)
-                _simpleTiles.Select(c => { c.transform.GetChild(0).transform.gameObject.GetComponent<Renderer>().material.color = Color.Lerp(colorStart, colorEnd, lerp); return c; }).ToList();
-            else
-                _simpleTiles.Select(c => { c.transform.GetChild(0).transform.gameObject.GetComponent<Renderer>().material.color = Color.Lerp(colorEnd, colorStart, lerp); return c; }).ToList();
-        }
-    }
+    //private void Update()
+    //{
+    //    if (_tileFallingCondition)
+    //    {
+    //        float lerp = Mathf.PingPong(Time.time, duration) / duration;
+    //        if (colorChange)
+    //            _simpleTiles.Select(c => { c.transform.GetChild(0).transform.gameObject.GetComponent<Renderer>().material.color = Color.Lerp(colorStart, colorEnd, lerp); return c; }).ToList();
+    //        else
+    //            _simpleTiles.Select(c => { c.transform.GetChild(0).transform.gameObject.GetComponent<Renderer>().material.color = Color.Lerp(colorEnd, colorStart, lerp); return c; }).ToList();
+    //    }
+    //}
 }
